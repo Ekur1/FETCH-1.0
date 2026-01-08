@@ -233,21 +233,11 @@
 
       function gameExtractAndRun() {
         start = Date.now();
-        var ret = Module.ccall('PyRun_SimpleString', 'number', ['string'], [
-          "import zipfile\n" +
-          "zip_ref = zipfile.ZipFile('game.zip', 'r')\n" +
-          "zip_ref.extractall('.')\n" +
-          "zip_ref.close()\n"
-        ])
-        if (ret != 0) {
-            Module.setStatus("Error extracting .zip.");
-            return;
-        }
-        FS.unlink('/game.zip')
-        Module.print("Extracted in " + (Date.now()-start)/1000.0 + "s\n");
+        // Skip extraction since game directory is already present
+        Module.print("Using existing game directory\n");
 
         if (FS.readdir('/').indexOf('game') < 0) {
-            Module.setStatus("Invalid .zip (no top-level 'game' directory).");
+            Module.setStatus("Error: No 'game' directory found.");
             return;
         }
 
